@@ -46,7 +46,8 @@ class UserController extends Controller
             'password'=> ['required', 'min:8', 'confirmed']            
         ]);
         $incomingFields['password'] = bcrypt($incomingFields['password']);
-        User::create($incomingFields);
-        return 'Register';
+        $user = User::create($incomingFields);
+        auth()->login($user); // send the cookie and log in automatically
+        return redirect('/')->with('success', 'Thank you for creating an account.');
     }
 }
