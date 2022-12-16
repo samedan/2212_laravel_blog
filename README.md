@@ -1,3 +1,7 @@
+## This Git
+
+https://github.com/samedan/2212_laravel_blog
+
 ## Launch project
 
 php artisan serve
@@ -9,6 +13,15 @@ mysql -u root -p
 > show databases;
 > CREATE DATABASE xxx;
 > exit;
+
+## Create Table
+
+> > New Migration
+> > php artisan make:migration create_posts_table
+> > php artisan migrate
+> > edit controller
+> > New Model
+> > php artisan make:model Post
 
 ## Views, Controllers
 
