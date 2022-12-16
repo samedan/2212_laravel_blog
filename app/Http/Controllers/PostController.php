@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
     public function viewSinglePost(Post $post) { // function in /resources/routes/web.php
+        // strip certains tags in html
+        $ourHTML = strip_tags(Str::markdown($post->body), 
+            // what tags ARE allowed
+            '<p><ul><li><strong><em><h3><br>');
+        $post['body'] = $ourHTML;
         return view('single-post', ['post'=>$post]); // blade file in /view/components/
     }
 

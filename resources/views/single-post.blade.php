@@ -18,7 +18,8 @@
       </p>
 
       <div class="body-content">
-        {{ $post->body }}
+        {{-- show/render HTML --}}
+        {!! $post->body !!}
       </div>
     </div>
 
