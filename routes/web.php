@@ -17,11 +17,14 @@ use App\Http\Controllers\UserController;
 */
 
 // User Routes
-Route::get('/', [UserController::class, "showCorrectHomepage"]);
-Route::post('/register', [UserController::class, "register"]);
-Route::post('/login', [UserController::class, "login"]);
-Route::post('/logout', [UserController::class, "logout"]);
+Route::get('/', [UserController::class, "showCorrectHomepage"])->name('login');
+// the '->name('login')' with the middleware '->middleware('auth')' redirects to login page
+Route::post('/register', [UserController::class, "register"])->middleware('guest');
+Route::post('/login', [UserController::class, "login"])->middleware('guest');
+Route::post('/logout', [UserController::class, "logout"])->middleware('mustBeLoggedIn');
 // Post Routes
-Route::get('/create-post', [PostController::class, "showCreateForm"]);
-Route::post('/create-post', [PostController::class, "storeNewPost"]);
+Route::get('/create-post', [PostController::class, "showCreateForm"])->middleware('mustBeLoggedIn');// middleware class comes from Kernel.php
+Route::post('/create-post', [PostController::class, "storeNewPost"])->middleware('mustBeLoggedIn');
 Route::get('/post/{post}', [PostController::class, "viewSinglePost"]);
+// Profile Routes
+Route::get('/profile/{user:username}', [UserController::class, 'profile']);
