@@ -16,6 +16,14 @@ use App\Http\Controllers\UserController;
 |
 */
 
+// Admin Routes
+Route::get('/admins-only', function() {
+  if(Gate::allows('visitAdminPages')) {
+    return 'Only visible for admins';
+  }
+  return 'You cannot viex this page';
+});
+
 // User Routes
 Route::get('/', [UserController::class, "showCorrectHomepage"])->name('login');
 // the '->name('login')' with the middleware '->middleware('auth')' redirects to login page
