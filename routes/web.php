@@ -18,11 +18,8 @@ use App\Http\Controllers\UserController;
 
 // Admin Routes
 Route::get('/admins-only', function() {
-  if(Gate::allows('visitAdminPages')) {
-    return 'Only visible for admins';
-  }
-  return 'You cannot viex this page';
-});
+  return 'Only visible for admins';
+})->middleware('can:visitAdminPages');
 
 // User Routes
 Route::get('/', [UserController::class, "showCorrectHomepage"])->name('login');
