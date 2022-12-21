@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Follow;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
@@ -16,23 +17,24 @@ class UserController extends Controller
         $request->validate([
             'avatar' => 'required|image|max:3000'
         ]);
-        // 'avatar' is the name of the input in the 'avatar-form.blade.php' file
+
         $user = auth()->user();
-        $filename = $user->id.'-'.uniqid().'.jpg';
+
+        $filename = $user->id . '-' . uniqid() . '.jpg';
+
         $imgData = Image::make($request->file('avatar'))->fit(120)->encode('jpg');
-        // store file on the HDD
-        Storage::put('public/avatars/'.$filename, $imgData);
+        Storage::put('public/avatars/' . $filename, $imgData);
+
         $oldAvatar = $user->avatar;
-        // update database
+
         $user->avatar = $filename;
         $user->save();
-        if($oldAvatar != "/fallback-avatar.jpg") {
-            // /storage/avatars/123456.jpg
-            // public/avatars/123456.jpg
+
+        if ($oldAvatar != "/fallback-avatar.jpg") {
             Storage::delete(str_replace("/storage/", "public/", $oldAvatar));
         }
-        return back()->with('success', 'You now have a nice avatar.');
 
+        return back()->with('success', 'Congrats on the new avatar.');
     }
 
     public function showAvatarForm() {
@@ -40,7 +42,15 @@ class UserController extends Controller
     }
     //
     public function profile(User $user) {
+       $currentlyFollowing = 0;
+       if(auth()->check()) {
+        $currentlyFollowing = Follow::where([
+            ['user_id', '=', auth()->user()->id],
+            ['followeduser', '=', $user->id]
+        ])->count();
+       } 
        return view('profile-posts', [
+        'currentlyFollowing' => $currentlyFollowing,
         'avatar' => $user->avatar,
         'username' => $user->username, 
         'posts'=> $user->posts()->latest()->get(),

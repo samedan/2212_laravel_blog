@@ -34,10 +34,10 @@
 
       <p class="text-muted small mb-4">
         <a href="#">
-          <?php $view_variable = $post->user_id; ?>
+          {{-- //  $view_variable = $post->user_id; ?>
 
-          <?= console_log($view_variable); ?>
-          <img class="avatar-tiny" src="{{$post->user->avatar}}" />
+          //  console_log($view_variable); ?> --}}
+          {{-- <img class="avatar-tiny" src="{{$post->user->avatar}}" /> --}}
           {{-- <img class="avatar-tiny" src="{{$avatar}}" /> --}}
         </a>
         {{-- 'getUserData' function on the 'User' model loads the 'user' and spits the 'username' --}}
