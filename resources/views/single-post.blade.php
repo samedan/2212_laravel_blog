@@ -33,15 +33,16 @@
       </div>
 
       <p class="text-muted small mb-4">
-        <a href="#">
+        <a href="/profile/{{$post->user->username}}">
+          
           {{-- //  $view_variable = $post->user_id; ?>
 
           //  console_log($view_variable); ?> --}}
-          {{-- <img class="avatar-tiny" src="{{$post->user->avatar}}" /> --}}
+          <img class="avatar-tiny" src="{{$post->user->avatar}}" />
           {{-- <img class="avatar-tiny" src="{{$avatar}}" /> --}}
         </a>
         {{-- 'getUserData' function on the 'User' model loads the 'user' and spits the 'username' --}}
-        Posted by <a href="#">{{ $post->getUserData->username }}</a> on {{ $post->created_at->format('n/j/Y') }}
+        Posted by <a href="/profile/{{$post->user->username}}">{{ $post->user->username }}</a> on {{ $post->created_at->format('n/j/Y') }}
       </p>
 
       <div class="body-content">
