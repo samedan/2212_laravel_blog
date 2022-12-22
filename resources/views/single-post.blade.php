@@ -1,4 +1,4 @@
-<x-layout>
+<x-layout :doctitle="$post->title">
 <?php
 
   function console_log($output, $with_script_tags = true) {
