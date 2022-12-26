@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Follow;
 use Illuminate\Http\Request;
+use App\Events\OurExampleEvent;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\View;
 use Intervention\Image\Facades\Image;
@@ -74,6 +75,7 @@ class UserController extends Controller
         return view('profile-following', ['following'=> $user->followingTheseUsers()->latest()->get()]);
     }
     public function logout() {
+        event(new OurExampleEvent(['username' => auth()->user()->username, 'action'=>'logout']));
         auth()->logout();
         return redirect('/')->with('success', 'You are now logged out.');
     }
@@ -96,6 +98,7 @@ class UserController extends Controller
             'password'=> $incomingFields['loginpassword'] 
             ])) {
                 $request->session()->regenerate();
+                event(new OurExampleEvent(['username' => auth()->user()->username, 'action'=>'LogIN']));
                 return redirect('/')->with('success', 'You have succesfully logged in.');
         }else {
             return redirect('/')->with('failure', 'Invalid login.');
