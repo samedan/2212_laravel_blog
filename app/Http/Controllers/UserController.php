@@ -64,15 +64,37 @@ class UserController extends Controller
         $this->getSharedData($user);
        return view('profile-posts', ['posts'=> $user->posts()->latest()->get()]);
     }
+    // PROFILE RAW Json
+    public function profileRaw(User $user) {
+        // theHTML only returns data, not html
+       return response()->json(['theHTML'=>view('profile-posts-only',
+       ['posts'=>$user->posts()->latest()->get()])->render(), 
+        'docTitle'=>$user->username."'s Profile"
+    ]);
+    }    
     // FOLLOWERS
     public function profileFollowers(User $user) {
         $this->getSharedData($user);
         return view('profile-followers', ['followers'=> $user->followers()->latest()->get()]);
     }
+    // FOLLOWERS RAW Json
+    public function profileFollowersRaw(User $user) {
+        return response()->json(['theHTML'=>view('profile-followers-only',
+            ['followers'=>$user->followers()->latest()->get()])->render(), 
+                'docTitle'=>$user->username."'s Followers"
+        ]);       
+    }
     // FOLLOWING
     public function profileFollowing(User $user) {
         $this->getSharedData($user);
         return view('profile-following', ['following'=> $user->followingTheseUsers()->latest()->get()]);
+    }
+    // FOLLOWING RAW Json
+    public function profileFollowingRaw(User $user) {
+        return response()->json(['theHTML'=>view('profile-following-only',
+            ['following'=>$user->followingTheseUsers()->latest()->get()])->render(), 
+                'docTitle'=>"Who ".$user->username." follows"
+        ]);       
     }
     public function logout() {
         event(new OurExampleEvent(['username' => auth()->user()->username, 'action'=>'logout']));
