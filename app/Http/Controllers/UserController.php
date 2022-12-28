@@ -122,6 +122,21 @@ class UserController extends Controller
         }
     }
 
+    // API Login
+    public function loginApi(Request $request) {
+        $incomingFields = $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+        // if the user has the right password
+        if(auth()->attempt($incomingFields)) {
+            $user = User::where('username', $incomingFields['username'])->first();
+            $token = $user->createToken('ourapptoken')->plainTextToken;
+            return $token;
+        }
+        return 'bad password';
+    }
+
     public function login(Request $request) {
         $incomingFields = $request-> validate([
             'loginusername'=> 'required',
