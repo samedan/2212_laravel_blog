@@ -109,13 +109,15 @@ class UserController extends Controller
             return view('homepage-feed', ['posts'=> auth()->user()->feedPosts()->latest()->paginate(4)]);
         }else {
             // Cache the number of posts server side
-            if(Cache::has('postCount')) {
-                $postCount = Cache::get('postCount');
-            } else {
-                // sleep(5); see if the app reloads
-                $postCount = Post::count();
-                Cache::put('postCount', $postCount, 20); // seconds
-            }            
+            $postCount = Cache::remember(
+                'postCount', // name of the cached variable
+                600, // number of seconds
+                function() { // what to do to write/read cache
+                    // sleep(5);
+                    return Post::count();
+                }
+            );
+
             return view('homepage', ['postCount'=> $postCount]);
         }
     }
