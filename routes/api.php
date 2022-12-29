@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -20,4 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [UserController::class, 'loginApi']);
-// Route::post('/login', [UserController::class, 'loginApi']);
+// 'auth:sanctum' means LoggedIn users, 'sanctum' means token based
+Route::post('/create-post', [PostController::class, 'storeNewPostApi'])->middleware('auth:sanctum');
+Route::delete('/delete-post/{post}', [PostController::class, 'deleteApi'])->middleware('auth:sanctum', 'can:delete,post');

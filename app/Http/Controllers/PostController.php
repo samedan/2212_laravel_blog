@@ -35,6 +35,12 @@ class PostController extends Controller
         $post->delete();
         return redirect('/profile/'.auth()->user()->username)->with('success', 'Post succesfully deleted.' );       
     }
+
+    // JWT Based Delete Post
+    public function deleteApi(Post $post) {
+        $post->delete();
+        return 'delete post true';
+    }
     public function viewSinglePost(Post $post) { // function in /resources/routes/web.php
         // strip certains tags in html
         $ourHTML = strip_tags(Str::markdown($post->body), 
@@ -67,5 +73,28 @@ class PostController extends Controller
             'title' => $newPost->title 
         ]));
         return redirect("/post/{$newPost->id}")->with('success', 'New post successfully created.');
+    }
+
+    // JWT Based POST Post
+    public function storeNewPostApi(Request $request) {
+        $incomingFields = $request->validate([
+            'title'=>'required',
+            'body'=>'required'
+        ]);
+        // strip of potential malicious HTML
+        $incomingFields['title'] = strip_tags($incomingFields['title']);
+        $incomingFields['body'] = strip_tags($incomingFields['body']);
+        // get userId from the current session
+        $incomingFields['user_id'] = auth()->id();
+        // write with the Post Model
+        $newPost = Post::create($incomingFields);
+        // send command to queue to send email
+        dispatch(new SendNewPostEmail([
+            'sendTo'=>auth()->user()->email,
+            'name' => auth()->user()->username,
+            'title' => $newPost->title 
+        ]));
+        return $newPost->id;
+        // return redirect("/post/{$newPost->id}")->with('success', 'New post successfully created.');
     }
 }
